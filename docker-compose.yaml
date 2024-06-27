@@ -1,0 +1,32 @@
+services:
+  library-service:
+    container_name: library-service
+    build: ./
+    image: mslfoxdocker/library-service
+    restart: no
+    environment:
+      spring.datasource.url: jdbc:postgresql://db-postgres:5432/library
+      spring.datasource.username: postgres
+      spring.datasource.password: postgres
+      spring.liquibase.enabled: true
+      spring.jpa.properties.hibernate.jdbc.time_zone: UTC
+      spring.jpa.hibernate.ddl-auto: validate
+      spring.jpa.show-sql: false
+      server_port: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-postgres
+
+  db-postgres:
+    container_name: db-postgres
+    image: postgres:15.1
+    environment:
+      POSTGRES_DB: library
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - D:/VolumePostgres/data/pgData_books:/var/lib/postgresql/data
+#      - /root/pgData_books:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
