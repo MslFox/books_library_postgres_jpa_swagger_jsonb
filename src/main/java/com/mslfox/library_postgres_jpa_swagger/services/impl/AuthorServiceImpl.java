@@ -49,9 +49,8 @@ public class AuthorServiceImpl implements AuthorService<AuthorCreateDTO, AuthorU
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void delete(Long id) {
-        if (!authorRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Author not found with id: " + id);
-        }
+        authorRepository.findByIdWithLock(id).orElseThrow(() ->
+                new ResourceNotFoundException("Author not found with id: " + id));
         authorRepository.deleteById(id);
     }
 
